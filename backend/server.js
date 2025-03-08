@@ -4,6 +4,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const dbConfig = require('./utils/dbConfig');
 const countryRoutes = require('./modules/country/countryRoutes');
+const transactionRoutes = require('./modules/transaction/transactionRoutes');
 
 dotenv.config();
 const app = express();
@@ -16,6 +17,7 @@ dbConfig();
 app.use(bodyParser.json());
 //routes
 app.use('/api/countries', countryRoutes);
+app.use('/api/transactions', transactionRoutes);
 const PORT = process.env.PORT || 5000;
 
 //server connection
