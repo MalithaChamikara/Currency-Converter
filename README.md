@@ -29,8 +29,8 @@ A simple currency converter application that allows users to convert currencies 
 The Project follows the mvc architecture(Model-View-Controller).
 📂 backend:
 models/ # Database models (Mongoose schemas) │ ├── countryModel.js # Country schema │ ├── transactionModel.js # Transaction schema 
-modules/ # Business logic modules │ ├── country/ # Country-related functionalities │ │ ├── countryController.js # Handles country-related API requests │ │ ├── countryRoutes.js # Defines country-related API routes │ │ ├── countryService.js # Country business logic (service layer) │ │ │ 
-transaction/ # Transaction-related functionalities │ │ ├── transactionController.js # Handles transaction API requests │ │ ├── transactionRoutes.js # Defines transaction-related API routes │ │ ├── transactionService.js # Transaction business logic (service layer) │ 
+modules/ # Business logic modules │ ├── country/ # Country-related functionalities │ │ ├── countryController.js # Handles country-related API requests │ │ ├── countryRoutes[...]
+transaction/ # Transaction-related functionalities │ │ ├── transactionController.js # Handles transaction API requests │ │ ├── transactionRoutes.js # Defines transaction-related AP[...]
 utils/ # Utility functions and configurations │ ├── dbConfig.js # Database connection setup │ 
 .env # Environment variables (not tracked by Git) 
 package.json # Project dependencies 
