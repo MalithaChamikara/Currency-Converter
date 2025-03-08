@@ -9,6 +9,7 @@ const transactionRoutes = require('./modules/transaction/transactionRoutes');
 dotenv.config();
 const app = express();
 app.use(cors());
+
 app.use(express.json());// to parse the incoming requests with JSON payloads
 
 //database connection

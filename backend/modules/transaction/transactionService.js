@@ -38,30 +38,16 @@ const createTransaction = async (transactionData) => {
     try {
         console.log(transactionData);
         const fromCountry = transactionData.fromCountry;
-        //fetch the currencyUnit of the fromCountry
-        const fromCountryData = await Country.findOne({ name: fromCountry });
-        if (!fromCountryData) {
-            console.log('Invalid fromCountry');
-            throw new Error('Country not found');
-        }
-        const fromCountryCurrencyCode = fromCountryData.currencyUnit;
         const toCountry = transactionData.toCountry;
-        //fetch the currencyUnit of the toCountry
-        const toCountryData = await Country.findOne({ name: toCountry });
-        if (!toCountryData) {
-            console.log('Invalid toCountry');
-            throw new Error('Country not found');
-        }
-        const toCountryCurrencyCode = toCountryData.currencyUnit;
-        const amount = transactionData.transferAmount;
+        const amount = parseFloat(transactionData.transferAmount);
         
         
         //fetch exchange rate from the exchange rate API
-        const response = await axios.get(`${EXCHANGE_API_URL}/${fromCountryCurrencyCode}`);
+        const response = await axios.get(`${EXCHANGE_API_URL}/${fromCountry}`);
         if (!response) {
             throw new Error('Error in fetching exchange rate');
           }
-        const exchangeRate = response.data.conversion_rates[toCountryCurrencyCode];
+        const exchangeRate = response.data.conversion_rates[toCountry];
         if(!exchangeRate){
             throw new Error('Invalid toCountryCurrencyCode or exchange rate not available');
         }
