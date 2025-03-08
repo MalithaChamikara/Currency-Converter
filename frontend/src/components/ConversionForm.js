@@ -53,7 +53,7 @@ const ConversionForm = ({ fetchTransactions, countries }) => {
 
         }
         try {
-            const response = await axios.post(`${BASE_API}/transactionS`, transactionData);
+            const response = await axios.post(`${BASE_API}/transactions`, transactionData);
             console.log("Transfer response: ", response.data);
             setFromCurrency("");
             setToCurrency("");

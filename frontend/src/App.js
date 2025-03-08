@@ -39,7 +39,7 @@ const App = () => {
   return (
     <Container>
       <Typography variant="h4" align="center" style={{ marginTop: "20px" }}>
-        Currency Transfer App
+        Currency Conversion App
       </Typography>
       <ConversionForm fetchTransactions={fetchTransactions}  countries={countries}/>
       <TransferHistory  transactions={transactions} fetchTransactions={fetchTransactions} countries={countries}/>
