@@ -1,10 +1,9 @@
 const mongoose = require('mongoose');
 const Transaction = require('../../models/transactionModel');
 const Country = require('../../models/countryModel');
-const axios = require('axios');
 
 
-const EXCHANGE_API_URL = `https://v6.exchangerate-api.com/v6/${process.env.EXCHANGE_RATE_API_KEY}/latest`;
+
 
 // Get all transactions
 // GET /api/transactions
@@ -37,24 +36,6 @@ const getTransactionById = async (id) => {
 const createTransaction = async (transactionData) => {
     try {
         console.log(transactionData);
-        const fromCountry = transactionData.fromCountry;
-        const toCountry = transactionData.toCountry;
-        const amount = parseFloat(transactionData.transferAmount);
-        
-        
-        //fetch exchange rate from the exchange rate API
-        const response = await axios.get(`${EXCHANGE_API_URL}/${fromCountry}`);
-        if (!response) {
-            throw new Error('Error in fetching exchange rate');
-          }
-        const exchangeRate = response.data.conversion_rates[toCountry];
-        if(!exchangeRate){
-            throw new Error('Invalid toCountryCurrencyCode or exchange rate not available');
-        }
-        //calculate the converted amount
-        const convertedAmount = amount * exchangeRate; 
-        transactionData.convertedAmount = convertedAmount;
-        transactionData.exchangeRate = exchangeRate;
         
         //create a new transaction
         const transaction = new Transaction(transactionData);
