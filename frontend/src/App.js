@@ -1,25 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState,useEffect } from "react";
+import { Container, Typography } from "@mui/material";
+import ConversionForm from "./components/ConversionForm";
+import TransferHistory from "./components/TransferHistory";
+import axios from "axios";
 
-function App() {
+const App = () => {
+  const [transactions, setTransactions] = useState([]);
+  useEffect(() => {
+    fetchTransactions();
+  }, []);
+
+  const fetchTransactions = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/transactions');
+      setTransactions(response.data);
+    } catch (error) {
+      console.error("Error fetching transactions: ", error);
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      <Typography variant="h4" align="center" style={{ marginTop: "20px" }}>
+        Currency Transfer App
+      </Typography>
+      <ConversionForm fetchTransactions={fetchTransactions} />
+      <TransferHistory  transactions={transactions} fetchTransactions={fetchTransactions}/>
+    </Container>
   );
-}
+};
 
 export default App;
