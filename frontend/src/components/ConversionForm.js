@@ -1,57 +1,83 @@
 import React, { useEffect, useState } from "react";
-import { Container, Select, TextField, MenuItem, Button, Typography, Paper, InputLabel } from "@mui/material";
+import { Container, Select, TextField, MenuItem, Button, Typography, Paper, InputLabel, Snackbar, Alert } from "@mui/material";
 import axios from "axios";
-import BASE_API from "../utils/apiConfig";
+import { EXCHANGE_API_URL, BASE_API } from "../utils/apiConfig";
 
 
-const ConversionForm = ({fetchTransactions}) => {
+
+const ConversionForm = ({ fetchTransactions, countries }) => {
     const [fromCurrency, setFromCurrency] = useState("");
     const [toCurrency, setToCurrency] = useState("");
     const [amount, setAmount] = useState("");
     const [convertedAmount, setConvertedAmount] = useState(null);
-    const [countries, setCountries] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [isTransferLoading, setIsTransferLoading] = useState(false);
+    const [exchangeRate, setExchangeRate] = useState(null);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState("");
+    const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
-    useEffect(() => {
-        fetchCountriesWithCurrencyCode();
-    }, []);
-
-    const fetchCountriesWithCurrencyCode = async () => {
+    const handleConvert = async (event) => {
+        event.preventDefault();
+        setIsLoading(true);
         try {
-            const response = await axios.get('http://localhost:5000/api/countries');
-            setCountries(response.data);
-            console.log("Countries with currency code: ", response.data);
-
+            const response = await axios.get(`${EXCHANGE_API_URL}${fromCurrency}`);
+            if (!response) {
+                throw new Error("Error in fetching exchange rate");
+            }
+            const exchangeRate = response.data.conversion_rates[toCurrency];
+            if (!exchangeRate) {
+                throw new Error("Invalid toCountryCurrencyCode or exchange rate not available");
+            }
+            setExchangeRate(exchangeRate);
+            const convertedAmount = amount * exchangeRate;
+            setConvertedAmount(convertedAmount);
+            setIsLoading(false);
         } catch (error) {
-            console.error("Error fetching countries with currency code: ", error);
+            console.error("Error converting amount: ", error);
+            showSnackbar("Error converting amount", "error");
+            setIsLoading(false)
         }
-    }
-
-    const handleConvert = async () => {
-        // Simulated conversion (Replace with API call)
 
     };
 
     const handleTransfer = async (event) => {
         event.preventDefault();
+        setIsTransferLoading(true);
         const transactionData = {
             fromCountry: fromCurrency,
             toCountry: toCurrency,
             transferAmount: amount,
+            convertedAmount: convertedAmount,
+            exchangeRate: exchangeRate,
 
         }
         try {
-            const response = await axios.post('http://localhost:5000/api/transactions', transactionData);
+            const response = await axios.post(`${BASE_API}/transactionS`, transactionData);
             console.log("Transfer response: ", response.data);
             setFromCurrency("");
             setToCurrency("");
             setConvertedAmount(null);
             setAmount("");
             fetchTransactions();
+            showSnackbar("Transaction saved successfully!", "success");
+            setIsTransferLoading(false);
         } catch (error) {
             console.error("Error transferring amount: ", error);
+            showSnackbar("Error saving transaction", "error");
+            setIsTransferLoading(false);
         }
     }
+    const showSnackbar = (message, severity) => {
+        setSnackbarMessage(message);
+        setSnackbarSeverity(severity);
+        setSnackbarOpen(true);
+    };
+
+    const handleSnackbarClose = () => {
+        setSnackbarOpen(false);
+    };
+
 
     return (
         <Container maxWidth="sm">
@@ -116,20 +142,36 @@ const ConversionForm = ({fetchTransactions}) => {
                     </Typography>
                 )}
 
-                {/* <Button variant="contained" color="primary" onClick={handleConvert} style={{ marginTop: "10px" }}>
-                    Convert
-                </Button> */}
-
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleConvert}
+                    style={{ marginTop: "10px" }}
+                    disabled={isLoading}
+                >
+                    {isLoading ? "Converting..." : "Convert"}
+                </Button>
                 <Button
                     variant="contained"
                     color="primary"
                     onClick={handleTransfer}
                     style={{ marginTop: "10px", marginLeft: "10px" }}
-                    // disabled={!convertedAmount}
+                    disabled={!convertedAmount}
                 >
-                    Transfer
+                    {isTransferLoading ? "Transferring..." : "Transfer"}
                 </Button>
             </Paper>
+            {/* Snackbar Notification */}
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={3000}
+                onClose={handleSnackbarClose}
+                anchorOrigin={{ vertical: "top", horizontal: "right" }}
+            >
+                <Alert onClose={handleSnackbarClose} severity={snackbarSeverity} sx={{ width: "100%" }}>
+                    {snackbarMessage}
+                </Alert>
+            </Snackbar>
         </Container>
     );
 };
