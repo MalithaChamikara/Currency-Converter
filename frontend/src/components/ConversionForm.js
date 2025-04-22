@@ -80,6 +80,7 @@ const ConversionForm = ({ fetchTransactions, countries }) => {
 
 
     return (
+        <>
         <Container maxWidth="sm">
             <Paper elevation={3} sx={{
                 padding: "25px",
@@ -173,6 +174,7 @@ const ConversionForm = ({ fetchTransactions, countries }) => {
                 </Alert>
             </Snackbar>
         </Container>
+        </>
     );
 };
 
