@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Container, Select, TextField, MenuItem, Button, Typography, Paper, InputLabel, Snackbar, Alert } from "@mui/material";
 import axios from "axios";
 import { EXCHANGE_API_URL, BASE_API } from "../utils/apiConfig";
