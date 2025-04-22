@@ -43,8 +43,7 @@ pipeline {
         stage('Start Backend') {
             steps {
                 dir("${env.BACKEND_DIR}") {
-                    bat 'pm2 delete all || echo "No existing process"'
-                    bat 'pm2 start server.js --name mern-backend'
+                    bat 'start /B node server.js'
                 }
             }
         }
