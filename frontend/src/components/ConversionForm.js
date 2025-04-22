@@ -118,7 +118,7 @@ const ConversionForm = ({ fetchTransactions, countries }) => {
                     onChange={(e) => setToCurrency(e.target.value)}
                 >
                     <MenuItem value="" disabled >
-                        Select a currency
+                        Select a currency Type
                     </MenuItem>
                     {countries.map((country) => (
                         <MenuItem key={country.id} value={country.currencyUnit}>
