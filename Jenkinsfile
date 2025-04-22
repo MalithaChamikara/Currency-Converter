@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('Clone Repo') {
             steps {
-                git 'https://github.com/MalithaChamikara/Currency-Converter.git'
+                git url: 'https://github.com/MalithaChamikara/Currency-Converter.git', branch: 'main'
             }
         }
 
