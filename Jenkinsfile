@@ -35,7 +35,8 @@ pipeline {
 
         stage('Deploy Frontend to NGINX') {
             steps {
-                bat "xcopy /E /I /Y ${env.BUILD_DIR}\\* ${env.NGINX_HTML_DIR}"
+                bat 'xcopy /E /I /Y "frontend\\build\\*" "C:\\nginx-1.26.3\\html\\"'
+
             }
         }
 
